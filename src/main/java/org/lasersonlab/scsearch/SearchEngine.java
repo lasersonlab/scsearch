@@ -3,6 +3,7 @@ package org.lasersonlab.scsearch;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
+import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -35,6 +36,12 @@ public class SearchEngine {
         }
         BulkResponse response = client.bulk(request).actionGet();
         if (response.hasFailures()) {
+            for (BulkItemResponse bulkItemResponse : response) {
+                if (bulkItemResponse.isFailed()) {
+                    BulkItemResponse.Failure failure = bulkItemResponse.getFailure();
+                    System.out.println(failure.getMessage());
+                }
+            }
             throw new IllegalStateException("Failures while bulk indexing");
         }
     }
