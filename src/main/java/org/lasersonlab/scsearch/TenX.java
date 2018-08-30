@@ -5,10 +5,8 @@ import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TenX {
 
@@ -81,5 +79,25 @@ public class TenX {
             }
             return cells;
         }
+    }
+
+    public static List<String> topGenes(List<Cell> cells, List<String> geneNames) {
+        Map<String, Integer> counts = new HashMap<>();
+        for (Cell cell : cells) {
+            for (int geneIndex: cell.geneIndices) {
+                String gene = geneNames.get(geneIndex);
+                Integer count = counts.get(gene);
+                if (count == null) {
+                    count = 1;
+                } else {
+                    count = count + 1;
+                }
+                counts.put(gene, count);
+            }
+        }
+        return counts.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .map(e -> e.getKey())
+                .collect(Collectors.toList());
     }
 }
