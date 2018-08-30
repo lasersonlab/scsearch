@@ -3,6 +3,9 @@ package org.lasersonlab.scsearch;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -18,10 +21,21 @@ import java.util.List;
 public class SearchEngine {
 
     public static void index(Client client, String index, String type, String jsonObject) {
-        IndexResponse response = client.prepareIndex(index, type).setTimeout("1s")
+        IndexResponse response = client.prepareIndex(index, type)
                 .setSource(jsonObject, XContentType.JSON).get();
         if (response.getResult() != DocWriteResponse.Result.CREATED) {
             throw new IllegalStateException("Document was not created");
+        }
+    }
+
+    public static void bulkIndex(Client client, String index, String type, List<String> jsonObjects) {
+        BulkRequest request = new BulkRequest();
+        for (String jsonObject : jsonObjects) {
+            request.add(new IndexRequest(index, type).source(jsonObject, XContentType.JSON));
+        }
+        BulkResponse response = client.bulk(request).actionGet();
+        if (response.hasFailures()) {
+            throw new IllegalStateException("Failures while bulk indexing");
         }
     }
 

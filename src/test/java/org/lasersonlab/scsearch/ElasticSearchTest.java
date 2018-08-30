@@ -11,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.net.InetAddress;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -40,10 +41,7 @@ public class ElasticSearchTest {
                 "{\"id\":2,\"genes\":[1, 2, 3]}",
         };
 
-        for (String cellDoc : cellDocs) {
-            SearchEngine.index(client, INDEX, TYPE, cellDoc);
-        }
-
+        SearchEngine.bulkIndex(client, INDEX, TYPE, Arrays.asList(cellDocs));
         SearchEngine.refreshIndex(client, INDEX);
 
         QueryBuilder queryAll = QueryBuilders.matchAllQuery();
