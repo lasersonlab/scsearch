@@ -13,10 +13,9 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class SearchEngine {
@@ -51,14 +50,15 @@ public class SearchEngine {
         client.admin().indices().refresh(request).actionGet();
     }
 
-    public static List<SearchHit> search(Client client, QueryBuilder query) {
+    public static SearchHits search(Client client, QueryBuilder query, String... indices) {
         SearchRequest searchRequest = new SearchRequest();
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(query);
+        searchRequest.indices(indices);
         searchRequest.source(searchSourceBuilder);
 
         SearchResponse searchResponse = client.search(searchRequest).actionGet();
-        return Arrays.asList(searchResponse.getHits().getHits());
+        return searchResponse.getHits();
     }
 
     public static void deleteIndex(Client client, String index) {
