@@ -18,6 +18,10 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import java.util.List;
 
+/**
+ * A facade to a search engine (Elasticsearch). Exposes methods to index and search documents, and to delete a whole
+ * index.
+ */
 public class SearchEngine {
 
     public static void index(Client client, String index, String type, String jsonObject) {

@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Convenience methods for reading a 10X dataset.
+ */
 public class TenX {
 
     static class Cell {

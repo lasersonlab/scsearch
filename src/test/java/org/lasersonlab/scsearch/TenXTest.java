@@ -10,24 +10,26 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class TenXTest {
+    private static final String FILE = "files/1M_neurons_filtered_gene_bc_matrices_h5.h5";
 
     @Test
     public void testGetGeneNames() throws IOException {
-        String file = "/Users/tom/workspace/hdf5-java-cloud/files/1M_neurons_filtered_gene_bc_matrices_h5.h5";
-        List<String> geneNames = TenX.getGeneNames(file);
+        List<String> geneNames = TenX.getGeneNames(FILE);
         assertEquals(27998, geneNames.size());
     }
 
     @Test
     public void testReadShard() throws IOException, InvalidRangeException {
-        String file = "/Users/tom/workspace/hdf5-java-cloud/files/1M_neurons_filtered_gene_bc_matrices_h5.h5";
         int totalShards = 320;
         int numShards = 3;
         for (int i = 0; i < numShards; i++) {
-            List<TenX.Cell> cells = TenX.readShard(file, totalShards, i);
-            List<String> topGenes = TenX.topGenes(cells, TenX.getGeneNames(file));
-            System.out.println(topGenes.subList(0, 5));
+            List<TenX.Cell> cells = TenX.readShard(FILE, totalShards, i);
             assertFalse(cells.isEmpty());
+            List<String> geneNames = TenX.getGeneNames(FILE);
+            List<String> topGenes = TenX.topGenes(cells, geneNames);
+            assertFalse(topGenes.isEmpty());
+            System.out.println(topGenes.subList(0, 50));
+            System.out.println(topGenes.get(topGenes.size() - 1));
         }
     }
 }

@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
-public class ElasticSearchTest {
+public class ElasticSearchIT {
 
     private static final String INDEX = "cells";
     private static final String TYPE = "cell";
