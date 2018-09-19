@@ -9,6 +9,7 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import ucar.ma2.InvalidRangeException;
 
@@ -22,11 +23,12 @@ import static org.junit.Assume.assumeTrue;
 
 public class TenXSearchIT {
     private static final String FILE = "files/1M_neurons_filtered_gene_bc_matrices_h5.h5";
-    private static final String INDEX = "10x";
+    private static final String INDEX = "10xtest";
     private static final String TYPE = "10x";
 
     private static Client client;
 
+    // set this to true to build an index the first time you run the test
     private static boolean index = false;
 
     @BeforeClass
@@ -42,6 +44,7 @@ public class TenXSearchIT {
     }
 
     @Test
+    @Ignore("requires a local elastic search instance")
     public void testIndex10x() throws IOException, InvalidRangeException {
         assumeTrue(index);
         int totalShards = 320;
@@ -61,6 +64,7 @@ public class TenXSearchIT {
     }
 
     @Test
+    @Ignore("requires a local elastic search instance")
     public void testCount10X() {
         QueryBuilder queryAll = QueryBuilders.matchAllQuery();
         long hitsCount = SearchEngine.search(client, queryAll, INDEX).getTotalHits();
@@ -68,6 +72,7 @@ public class TenXSearchIT {
     }
 
     @Test
+    @Ignore("requires a local elastic search instance")
     public void testSearch10X() throws IOException {
         List<String> allGenes = TenX.getGeneNames(FILE);
         String commonGene = "ENSMUSG00000050708";

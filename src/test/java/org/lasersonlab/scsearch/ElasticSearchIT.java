@@ -8,6 +8,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.InetAddress;
@@ -33,6 +34,7 @@ public class ElasticSearchIT {
     }
 
     @Test
+    @Ignore("requires a local elastic search instance")
     public void testAll() {
         String[] cellDocs = {
                 "{\"id\":0,\"genes\":[0, 2]}",
